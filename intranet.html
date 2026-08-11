@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intranet - El Túnel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="intranet.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <header class="navbar">
+        <nav>
+            <ul>
+                <li><a href="index.html">Sucursal</a></li>
+                <li><a href="intranet.html" class="highlight-link">Intranet</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="login-screen" class="login-container">
+        <div class="login-box">
+            <h2>Acceso a Intranet</h2>
+            <p>Solo personal autorizado</p>
+            <input type="email" id="login-email" placeholder="Correo electrónico" required>
+            <input type="password" id="login-password" placeholder="Contraseña" required>
+            <button onclick="iniciarSesion()" class="btn-primary">Entrar</button>
+            <p id="login-error" style="color: #d9534f; display: none; margin-top: 10px;">Usuario o contraseña incorrectos.</p>
+        </div>
+    </div>
+
+    <div id="dashboard-screen" style="display: none;">
+        <header class="navbar intranet-nav">
+            <h2>Panel de Administración - El Túnel</h2>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                
+                <!-- Botón oculto para subir foto de perfil -->
+                <input type="file" id="profile-file" accept="image/*" style="display: none;" onchange="subirFotoPerfil(event)">
+                
+                <div style="position: relative; cursor: pointer;" onclick="document.getElementById('profile-file').click()" title="Cambiar tu foto">
+                    <img id="user-avatar" src="" alt="Perfil" style="width: 45px; height: 45px; border-radius: 50%; border: 2px solid #444; object-fit: cover;">
+                    <div style="position: absolute; bottom: -2px; right: -2px; background: #9c2720; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; justify-content: center; align-items: center; font-size: 10px;">📸</div>
+                </div>
+                
+                <span id="user-name" style="color: #e0e0e0; font-weight: 600;">Cargando...</span>
+                <button onclick="cerrarSesion()" class="btn-logout" style="margin-top: 0;">Cerrar Sesión</button>
+            </div>
+        </header>
+
+        <div class="noticias-bar">
+            <span class="badge-noticia">ÚLTIMA HORA</span>
+            <div class="scroll-noticias">
+                <p>📢 Reunión de inventario este viernes a las 8:00 AM. | 🎂 ¡Feliz cumpleaños a María del turno vespertino! | 📦 Han llegado 50 nuevos ejemplares de "Rayuela".</p>
+            </div>
+        </div>
+
+        <main class="dashboard-grid container">
+            <div class="columna-principal">
+                <section class="admin-card">
+                    <h3>➕ Agregar Nuevo Libro</h3>
+                    <form id="add-book-form" class="form-grid">
+                        <input type="text" id="book-title" placeholder="Título del libro" required>
+                        <input type="text" id="book-author" placeholder="Autor" required>
+                        <input type="number" id="book-price" placeholder="Precio ($)" required>
+                        <!-- Selector de archivos para la portada del libro -->
+                        <label for="book-image" style="display:block; margin-bottom: 5px; color: #aaa; font-size: 0.9rem;">Portada del libro:</label>
+                        <input type="file" id="book-image" accept="image/*" required style="background: #121212; color: #fff; padding: 10px; border-radius: 6px; border: 1px solid #444; width: 100%; margin-bottom: 15px;">
+                        
+                        <button type="submit" class="btn-primary" id="btn-submit-book">Agregar al Catálogo</button>
+                    </form>
+                </section>
+
+                <section class="admin-card mt-20">
+                    <h3>🗑️ Eliminar Libros</h3>
+                    <ul id="lista-libros-admin" class="lista-admin">
+                        <li>Cargando libros...</li>
+                    </ul>
+                </section>
+
+                <section class="admin-card mt-20">
+                    <h3>📊 Reportes de Venta Diarios</h3>
+                    <p>Genera el corte de caja e inventario del día de hoy.</p>
+                    <button onclick="window.print()" class="btn-secondary">🖨️ Imprimir Reporte de Hoy</button>
+                </section>
+            </div>
+
+            <div class="columna-secundaria">
+                <section class="admin-card chat-box">
+                    <h3>💬 Mensajes Internos</h3>
+                    <div class="mensajes-container" id="chat-mensajes"></div>
+                    <form id="chat-form" class="chat-input-area">
+                        <input type="text" id="chat-input" placeholder="Escribe un mensaje..." required>
+                        <button type="submit" class="btn-primary">Enviar</button>
+                    </form>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script src="intranet.js"></script>
+</body>
+</html>
