@@ -86,10 +86,17 @@ async function cargarLibrosAdmin() {
 
     if (libros) {
         libros.forEach(libro => {
+            // Reemplazamos comillas simples y dobles por seguridad en el HTML
+            const safeTitle = libro.titulo.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+            const safeAuthor = libro.autor.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
             lista.innerHTML += `
                 <li>
                     <span><strong>${libro.titulo}</strong> - ${libro.autor} ($${libro.precio})</span>
-                    <button class="btn-danger" onclick="borrarLibro('${libro.id}')">Borrar</button>
+                    <div>
+                        <button class="btn-edit" onclick="abrirModalEditar('${libro.id}', '${safeTitle}', '${safeAuthor}', ${libro.precio})">Editar</button>
+                        <button class="btn-danger" onclick="borrarLibro('${libro.id}')">Borrar</button>
+                    </div>
                 </li>
             `;
         });
@@ -157,6 +164,53 @@ async function borrarLibro(id) {
         else cargarLibrosAdmin();
     }
 }
+
+// LÓGICA DE EDICIÓN DE LIBROS
+function abrirModalEditar(id, titulo, autor, precio) {
+    // Llenamos los inputs del modal con los datos del libro
+    document.getElementById('edit-book-id').value = id;
+    document.getElementById('edit-book-title').value = titulo;
+    document.getElementById('edit-book-author').value = autor;
+    document.getElementById('edit-book-price').value = precio;
+    
+    // Mostramos el modal
+    document.getElementById('edit-modal').style.display = 'flex';
+}
+
+function cerrarModalEditar() {
+    // Ocultamos el modal
+    document.getElementById('edit-modal').style.display = 'none';
+}
+
+document.getElementById('edit-book-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const id = document.getElementById('edit-book-id').value;
+    const titulo = document.getElementById('edit-book-title').value;
+    const autor = document.getElementById('edit-book-author').value;
+    const precio = parseFloat(document.getElementById('edit-book-price').value);
+
+    const btnUpdate = document.getElementById('btn-update-book');
+    const textoOriginal = btnUpdate.innerText;
+    btnUpdate.innerText = "Guardando...";
+    btnUpdate.disabled = true;
+
+    // Instrucción UPDATE de Supabase
+    const { error } = await db.from('libros')
+        .update({ titulo: titulo, autor: autor, precio: precio })
+        .eq('id', id);
+
+    btnUpdate.innerText = textoOriginal;
+    btnUpdate.disabled = false;
+
+    if (error) {
+        alert("Error al actualizar el libro: " + error.message);
+    } else {
+        alert("¡Libro actualizado exitosamente!");
+        cerrarModalEditar();
+        cargarLibrosAdmin(); // Recargar la lista
+    }
+});
 
 
 //CHAT
