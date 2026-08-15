@@ -62,7 +62,7 @@
                     <form id="add-book-form" class="form-grid">
                         <input type="text" id="book-title" placeholder="Título del libro" required>
                         <input type="text" id="book-author" placeholder="Autor" required>
-                        <input type="number" id="book-price" placeholder="Precio ($)" required>
+                        <input type="number" id="book-price" placeholder="Precio ($)" step="0.01" required>
                         <!-- Selector de archivos para la portada del libro -->
                         <label for="book-image" style="display:block; margin-bottom: 5px; color: #aaa; font-size: 0.9rem;">Portada del libro:</label>
                         <input type="file" id="book-image" accept="image/*" required style="background: #121212; color: #fff; padding: 10px; border-radius: 6px; border: 1px solid #444; width: 100%; margin-bottom: 15px;">
@@ -72,7 +72,7 @@
                 </section>
 
                 <section class="admin-card mt-20">
-                    <h3>🗑️ Eliminar Libros</h3>
+                    <h3>🗑️ Gestionar Libros</h3>
                     <ul id="lista-libros-admin" class="lista-admin">
                         <li>Cargando libros...</li>
                     </ul>
@@ -97,6 +97,27 @@
             </div>
         </main>
     </div>
+
+    <!-- MODAL PARA EDITAR LIBRO -->
+    <div id="edit-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content admin-card">
+            <h3>✏️ Editar Libro</h3>
+            <form id="edit-book-form" class="form-grid">
+                <!-- Campo oculto para guardar el ID del libro que estamos editando -->
+                <input type="hidden" id="edit-book-id">
+                
+                <input type="text" id="edit-book-title" placeholder="Título del libro" required>
+                <input type="text" id="edit-book-author" placeholder="Autor" required>
+                <input type="number" id="edit-book-price" placeholder="Precio ($)" step="0.01" required>
+                
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button type="submit" class="btn-primary" id="btn-update-book">Guardar Cambios</button>
+                    <button type="button" class="btn-secondary" onclick="cerrarModalEditar()" style="margin-top: 15px;">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="intranet.js"></script>
 </body>
 </html>
